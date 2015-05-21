@@ -56,7 +56,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="email"
         android:id="@+id/email"
-        android:layout_above="@+id/email_text"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
     <Button
