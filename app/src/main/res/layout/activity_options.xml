@@ -35,7 +35,8 @@
         android:ems="10"
         android:id="@+id/name_text"
         android:layout_below="@+id/username"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="49dp" />
 
 
     <EditText
@@ -56,7 +57,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="email"
         android:id="@+id/email"
-        android:layout_above="@+id/email_text"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
     <Button
