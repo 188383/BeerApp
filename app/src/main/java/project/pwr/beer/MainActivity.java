@@ -30,8 +30,7 @@ public class MainActivity extends Activity {
         if(requestCode==REGISTER_USER){
             if(resultCode==RESULT_OK){
                 USER_NAME =  data.getStringExtra(USER);
-
-              EMAIL =  data.getStringExtra(PASS);
+                EMAIL =  data.getStringExtra(PASS);
             }
         }
     }
@@ -44,8 +43,12 @@ public class MainActivity extends Activity {
         Button listBeers = (Button)findViewById(R.id.list_beers);
         Button options = (Button)findViewById(R.id.options);
         Button location = (Button)findViewById(R.id.location);
-        //Check if the user is registered either in DB or in file
-        //if yes continue normally, else fill out register
+        /*
+            Thread checks whether the user has registered.
+            If the user has registered then we're good to go, otherwise
+            the user has to register a name and send it to the database.
+        */
+
         new Thread(new Runnable() {
 
             @Override
