@@ -16,11 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
+import org.json.*;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -42,6 +44,7 @@ public class MainActivity extends Activity {
             if(resultCode==RESULT_OK){
                 USER_NAME =  data.getStringExtra(USER);
                 EMAIL =  data.getStringExtra(PASS);
+
             }
         }
     }
@@ -72,11 +75,13 @@ public class MainActivity extends Activity {
                     Intent intent = new Intent(getApplicationContext(), OptionsActivity.class);
                     startActivityForResult(intent,REGISTER_USER);
                 }else{
-                    new UpdateClass().execute(new String[]{"http://192.168.1.11:8080/BeerServer/list"});
+                   // new RegisterClass().execute(new String[]{"http://192.168.1.11:8080/BeerServer/list"});
+                   //create an update
                 }
             }
         }).start();
 
+        new RegisterClass().execute(new String[]{"fatima","pawel@otrebski.org"});
 
     }
     /*
@@ -87,48 +92,52 @@ public class MainActivity extends Activity {
 
         This one will be handling the GET method
      */
-    private class UpdateClass extends AsyncTask<String,Void,String>{
+    private class RegisterClass extends AsyncTask<String,Void,String>{
 
-        private String readValues(InputStream is){
-            Scanner scan = new Scanner(is);
-            String input = "";
-            while(scan.hasNext()){
-                input = input.concat(scan.next());
+        private String readValues(InputStream is)throws Exception{
+            BufferedReader scan = new BufferedReader(new InputStreamReader(is));
+            String input;
+            String buffer = "";
+            if(scan.ready()){
+                while((input=scan.readLine())!=null){
+                    buffer = buffer.concat(input);
+                }
             }
-            return input;
+            return buffer;
         }
+        private String buildPost(String... names) throws Exception{
+            JSONObject object = new JSONObject();
+            object.put("username",names[0]);
+            object.put("email",names[1]);
+
+            return object.toString();
+        }
+
 
         protected String doInBackground(String... urls){
             InputStream is = null;
             OutputStream os =null;
-            String content = "";
-            for(String url:urls){
-                try{
-                    URL newURL = new URL(url);
-                    HttpURLConnection connection = (HttpURLConnection)newURL.openConnection();
-                    connection.setRequestMethod("POST");
-                    connection.setDoOutput(true);
-                    connection.setDoInput(true);
-                    connection.connect();
+            String post = null;
+            String answer = null;
+            try {
+                post = buildPost(urls);
 
-                    Uri.Builder builder = new Uri.Builder().appendQueryParameter("Name","pawel")
-                            .appendQueryParameter("Surname","otrebski");
-
-                    String query = builder.build().getEncodedQuery();
-                    os = connection.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(os));
-                    writer.write(query);
-                    writer.flush();
-                    is = connection.getInputStream();
-
-                    content = readValues(is);
-                    connection.disconnect();
-
-                }catch(Exception e){content = e.getMessage();}
-
-            }
-            return content;
+                URL newURL = new URL("http://192.168.1.11:8080/BeerServer/list");
+                HttpURLConnection connection = (HttpURLConnection)newURL.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type",
+                        "application/x-www-form-urlencoded");
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+                connection.connect();
+                String query = "data="+post;
+                os = connection.getOutputStream();
+                os.write(query.getBytes());
+                is = connection.getInputStream();
+                answer = readValues(is);
+                connection.disconnect();
+            }catch(Exception e){post = "data=\"\"";}
+            return answer;
         }
 
         protected void onPostExecute(String result){
