@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.net.URI;
 import java.net.URL;
 
@@ -41,7 +43,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         Button listBeers = (Button)findViewById(R.id.list_beers);
-       
+
         Button location = (Button)findViewById(R.id.location);
         /*
             Thread checks whether the user has registered.
@@ -64,5 +66,21 @@ public class MainActivity extends Activity {
             }
         }).start();
 
+    }
+
+    private class UpdateClass extends AsyncTask<String,Void,String>{
+
+        protected String doInBackground(String... urls){
+            for(String url:urls){
+               
+
+            }
+
+            return "string";
+        }
+
+        protected void onPostExecute(String result){
+
+        }
     }
 }
