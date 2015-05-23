@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,11 +15,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.sql.Connection;
+import java.util.Scanner;
 
 public class MainActivity extends Activity {
     private String USER_NAME=null;
@@ -66,21 +72,46 @@ public class MainActivity extends Activity {
             }
         }).start();
 
+        new UpdateClass().execute(new String[]{"http://192.168.1.11:8080/BeerServer/list"});
     }
 
     private class UpdateClass extends AsyncTask<String,Void,String>{
 
+        private String readValues(InputStream is){
+            Scanner scan = new Scanner(is);
+            String input = "";
+            while(scan.hasNextLine()){
+                input = input.concat(scan.nextLine());
+            }
+            return input;
+        }
+
         protected String doInBackground(String... urls){
+            InputStream is = null;
+            String content = "";
             for(String url:urls){
-               
+                try{
+                    URL newURL = new URL(url);
+                    HttpURLConnection connection = (HttpURLConnection)newURL.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.connect();
+                    is = connection.getInputStream();
+                    content = readValues(is);
+                    is.close();
+                }catch(Exception e){content = null;}
 
             }
 
-            return "string";
+            return content;
         }
 
         protected void onPostExecute(String result){
+            Context context = getApplicationContext();
+            CharSequence text = result;
+            int duration = Toast.LENGTH_SHORT;
 
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         }
     }
 }
