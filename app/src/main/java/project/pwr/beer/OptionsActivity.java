@@ -11,6 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+/*
+    This is the options activity, that becomes active if
+    the user is not registered.
+
+    If there is a name value pair for the user that have a username and email
+    then the user is considered registered. Due to time constraints cannot add
+    full user verification at this time.
+ */
 
 public class OptionsActivity extends Activity {
    // public static final String USER = "com.user";

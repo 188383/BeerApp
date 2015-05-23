@@ -19,7 +19,10 @@ import android.widget.Toast;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.BufferedWriter;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -68,47 +71,70 @@ public class MainActivity extends Activity {
                 if(USER_NAME==null||EMAIL==null) {
                     Intent intent = new Intent(getApplicationContext(), OptionsActivity.class);
                     startActivityForResult(intent,REGISTER_USER);
+                }else{
+                    new UpdateClass().execute(new String[]{"http://192.168.1.11:8080/BeerServer/list"});
                 }
             }
         }).start();
 
-        new UpdateClass().execute(new String[]{"http://192.168.1.11:8080/BeerServer/list"});
-    }
 
+    }
+    /*
+        This is the async task that will check the server for updates
+
+        There will be another async task like this one that will actually hold the
+        POST method for posting information to the server.
+
+        This one will be handling the GET method
+     */
     private class UpdateClass extends AsyncTask<String,Void,String>{
 
         private String readValues(InputStream is){
             Scanner scan = new Scanner(is);
             String input = "";
-            while(scan.hasNextLine()){
-                input = input.concat(scan.nextLine());
+            while(scan.hasNext()){
+                input = input.concat(scan.next());
             }
             return input;
         }
 
         protected String doInBackground(String... urls){
             InputStream is = null;
+            OutputStream os =null;
             String content = "";
             for(String url:urls){
                 try{
                     URL newURL = new URL(url);
                     HttpURLConnection connection = (HttpURLConnection)newURL.openConnection();
-                    connection.setRequestMethod("GET");
+                    connection.setRequestMethod("POST");
+                    connection.setDoOutput(true);
+                    connection.setDoInput(true);
                     connection.connect();
+
+                    Uri.Builder builder = new Uri.Builder().appendQueryParameter("Name","pawel")
+                            .appendQueryParameter("Surname","otrebski");
+
+                    String query = builder.build().getEncodedQuery();
+                    os = connection.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(
+                            new OutputStreamWriter(os));
+                    writer.write(query);
+                    writer.flush();
                     is = connection.getInputStream();
+
                     content = readValues(is);
-                    is.close();
-                }catch(Exception e){content = null;}
+                    connection.disconnect();
+
+                }catch(Exception e){content = e.getMessage();}
 
             }
-
             return content;
         }
 
         protected void onPostExecute(String result){
             Context context = getApplicationContext();
             CharSequence text = result;
-            int duration = Toast.LENGTH_SHORT;
+            int duration = Toast.LENGTH_LONG;
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
