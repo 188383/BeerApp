@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         Button listBeers = (Button)findViewById(R.id.list_beers);
-        Button options = (Button)findViewById(R.id.options);
+       
         Button location = (Button)findViewById(R.id.location);
         /*
             Thread checks whether the user has registered.
