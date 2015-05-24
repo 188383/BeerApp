@@ -29,24 +29,43 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+import project.pwr.database.DataProc;
+
+import static android.content.Context.*;
 
 public class MainActivity extends Activity {
     private String USER_NAME=null;
     private String EMAIL=null;
-
+    private boolean registered =false;
     public static final String USER = "com.beer.drinker";
     public static final String PASS = "com.beer.pass";
     static final int REGISTER_USER = 1;
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode==REGISTER_USER){
-            if(resultCode==RESULT_OK){
-                USER_NAME =  data.getStringExtra(USER);
-                EMAIL =  data.getStringExtra(PASS);
+    public void onSavedInstanceState(Bundle savedInstanceState){
+        savedInstanceState.putString(USER,USER_NAME);
+        savedInstanceState.putString(PASS,EMAIL);
+    }
 
-            }
-        }
+    public void onResume(){
+        super.onResume();
+        Context context = getApplicationContext();
+        SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.credentials), MODE_PRIVATE);
+        USER_NAME = sharedPreferences.getString(USER,null);
+        EMAIL = sharedPreferences.getString(PASS,null);
+        boolean exists = sharedPreferences.contains("com.answer");
+        CharSequence text = sharedPreferences.getString("com.answer","no value");
+        int duration = Toast.LENGTH_LONG;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+        new RegisterClass().execute(new String[]{"1",USER_NAME,EMAIL});
     }
 
     @Override
@@ -54,89 +73,35 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Context ctx = getApplicationContext();
+
+        SharedPreferences sharedPreferences = ctx.getSharedPreferences(getString(R.string.credentials), MODE_PRIVATE);
+        USER_NAME = sharedPreferences.getString(USER,null);
+        EMAIL = sharedPreferences.getString(PASS,null);
+
+        if(USER_NAME==null&&EMAIL==null){
+            Intent intent = new Intent(this,OptionsActivity.class);
+            startActivity(intent);
+        }
+
         Button listBeers = (Button)findViewById(R.id.list_beers);
-
         Button location = (Button)findViewById(R.id.location);
-        /*
-            Thread checks whether the user has registered.
-            If the user has registered then we're good to go, otherwise
-            the user has to register a name and send it to the database.
-        */
 
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                Context ctx = getApplicationContext();
-                SharedPreferences shared = ctx.getSharedPreferences(getString(R.string.credentials),Context.MODE_PRIVATE);
-                USER_NAME = shared.getString(USER,null);
-                EMAIL = shared.getString(PASS,null);
-                if(USER_NAME==null||EMAIL==null) {
-                    Intent intent = new Intent(getApplicationContext(), OptionsActivity.class);
-                    startActivityForResult(intent,REGISTER_USER);
-                }else{
-                   // new RegisterClass().execute(new String[]{"http://192.168.1.11:8080/BeerServer/list"});
-                   //create an update
-                }
-            }
-        }).start();
-
-        new RegisterClass().execute(new String[]{"fatima","pawel@otrebski.org"});
 
     }
-    /*
-        This is the async task that will check the server for updates
 
-        There will be another async task like this one that will actually hold the
-        POST method for posting information to the server.
-
-        This one will be handling the GET method
-     */
     private class RegisterClass extends AsyncTask<String,Void,String>{
-
-        private String readValues(InputStream is)throws Exception{
-            BufferedReader scan = new BufferedReader(new InputStreamReader(is));
-            String input;
-            String buffer = "";
-            if(scan.ready()){
-                while((input=scan.readLine())!=null){
-                    buffer = buffer.concat(input);
-                }
-            }
-            return buffer;
-        }
-        private String buildPost(String... names) throws Exception{
-            JSONObject object = new JSONObject();
-            object.put("username",names[0]);
-            object.put("email",names[1]);
-
-            return object.toString();
-        }
 
 
         protected String doInBackground(String... urls){
-            InputStream is = null;
-            OutputStream os =null;
+            int action  = Integer.parseInt(urls[0]);
+            DataProc proc = new DataProc();
             String post = null;
             String answer = null;
             try {
-                post = buildPost(urls);
-
-                URL newURL = new URL("http://192.168.1.11:8080/BeerServer/list");
-                HttpURLConnection connection = (HttpURLConnection)newURL.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type",
-                        "application/x-www-form-urlencoded");
-                connection.setDoOutput(true);
-                connection.setDoInput(true);
-                connection.connect();
-                String query = "data="+post;
-                os = connection.getOutputStream();
-                os.write(query.getBytes());
-                is = connection.getInputStream();
-                answer = readValues(is);
-                connection.disconnect();
-            }catch(Exception e){post = "data=\"\"";}
+              post = proc.buildPost(urls);
+              answer = proc.postData(post);
+            }catch(Exception e){answer = null;}
             return answer;
         }
 

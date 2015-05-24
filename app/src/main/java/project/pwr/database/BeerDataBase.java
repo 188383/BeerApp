@@ -3,24 +3,19 @@ package project.pwr.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 
 /**
  * Created by pawel on 22.05.15.
  *
  */
 
-public class BeerDataBase extends SQLiteOpenHelper{
+public class BeerDataBase{
 
-    public BeerDataBase(Context context){
-        super(context,null,null,0);
-    }
-    @Override
-    public void onCreate(SQLiteDatabase db) {
+    public BeerDataBase(){}
 
+    private static abstract class BeerDataBaseContract implements BaseColumns{
+        
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
 }

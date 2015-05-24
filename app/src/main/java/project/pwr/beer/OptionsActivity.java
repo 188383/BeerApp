@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import project.pwr.database.DataProc;
 
 /*
     This is the options activity, that becomes active if
@@ -24,6 +28,8 @@ public class OptionsActivity extends Activity {
    // public static final String USER = "com.user";
   //  public static final String PASS = "com.pass";
 
+    String name = null;
+    String email = null;
     public void onPause(){
         super.onPause();
     }
@@ -50,18 +56,17 @@ public class OptionsActivity extends Activity {
             public void onClick(View v) {
                 Context ctx = getApplicationContext();
                 EditText txt =  (EditText)findViewById(R.id.name_text);
-                String name = txt.getText().toString();
+                name = txt.getText().toString();
                 txt = (EditText)findViewById(R.id.email_text);
-                String email = txt.getText().toString();
+                email = txt.getText().toString();
                 SharedPreferences shared = ctx.getSharedPreferences(getString(R.string.credentials),Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 editor.putString(MainActivity.USER,name);
                 editor.putString(MainActivity.PASS,email);
                 editor.commit();
-                Intent intent = new Intent();
-                intent.putExtra(MainActivity.USER,name);
-                intent.putExtra(MainActivity.PASS,email);
-                finish();
+                RegisterUser s = new RegisterUser();
+                s.execute("0", name, email);
+
             }
         });
 
@@ -72,5 +77,29 @@ public class OptionsActivity extends Activity {
                 //with warning that exit to register
             }
         });
+    }
+
+    private class RegisterUser extends AsyncTask<String,Void,String> {
+
+        protected String doInBackground(String... urls){
+            int action  = Integer.parseInt(urls[0]);
+            DataProc proc = new DataProc();
+            String post = null;
+            String answer = null;
+            try {
+                post = proc.buildPost(urls);
+                answer = proc.postData(post);
+                Context ctx = getApplicationContext();
+                SharedPreferences shared = ctx.getSharedPreferences(getString(R.string.credentials),Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString("com.answer",answer);
+                editor.commit();
+            }catch(Exception e){answer = null;}
+            return answer;
+        }
+
+        protected void onPostExecute(String result){
+
+        }
     }
 }
