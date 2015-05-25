@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import android.content.Context;
 import android.net.*;
 
 /**
@@ -43,6 +44,8 @@ public class DataProc {
         OutputStream os =null;
         String answer = null;
 
+
+
         URL newURL = new URL("http://192.168.1.11:8080/BeerServer/list");
         HttpURLConnection connection = (HttpURLConnection)newURL.openConnection();
         connection.setRequestMethod("POST");
@@ -57,11 +60,11 @@ public class DataProc {
         os.write(query.getBytes());
 
         is = connection.getInputStream();
-        byte[]size = new byte[10];
-        is.read(size);
-        String t = new String(size);
-        int l = Integer.parseInt(t);
-        byte[]values = new byte[l];
+       // byte[]size = new byte[10];
+     //   is.read(size);
+     //   String t = new String(size);
+     //   int l = Integer.parseInt(t);
+        byte[]values = new byte[2096];
         is.read(values);
         answer = (new String(values)).trim();//readValues(is);
 

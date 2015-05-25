@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import project.pwr.database.BeerDBHelper;
 
 import project.pwr.database.DataProc;
 
@@ -27,6 +32,9 @@ import project.pwr.database.DataProc;
 public class OptionsActivity extends Activity {
    // public static final String USER = "com.user";
   //  public static final String PASS = "com.pass";
+
+    SQLiteDatabase db;
+    BeerDBHelper mHelper;
 
     String name = null;
     String email = null;
@@ -86,20 +94,27 @@ public class OptionsActivity extends Activity {
             DataProc proc = new DataProc();
             String post = null;
             String answer = null;
+            Context context = getApplicationContext();
             try {
                 post = proc.buildPost(urls);
-                answer = proc.postData(post);
-                Context ctx = getApplicationContext();
-                SharedPreferences shared = ctx.getSharedPreferences(getString(R.string.credentials),Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                editor.putString("com.answer",answer);
-                editor.commit();
-            }catch(Exception e){answer = null;}
+                 answer = proc.postData(post);
+                 Context ctx = getApplicationContext();
+                 SharedPreferences shared = ctx.getSharedPreferences(getString(R.string.credentials), Context.MODE_PRIVATE);
+                 SharedPreferences.Editor editor = shared.edit();
+                 editor.putString("com.answer", "connected");
+                 editor.commit();
+
+
+            }catch(Exception e){answer = e.getMessage();}
             return answer;
         }
 
-        protected void onPostExecute(String result){
-
+        protected void onPostExecute(String string){
+            Context context = getApplicationContext();
+            int duration = Toast.LENGTH_LONG;
+            String text = string;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         }
     }
 }

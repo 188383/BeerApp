@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -36,6 +37,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import project.pwr.database.BeerDBHelper;
 import project.pwr.database.DataProc;
 
 import static android.content.Context.*;
@@ -47,7 +49,8 @@ public class MainActivity extends Activity {
     public static final String USER = "com.beer.drinker";
     public static final String PASS = "com.beer.pass";
     static final int REGISTER_USER = 1;
-
+    BeerDBHelper helper = null;
+    SQLiteDatabase db =null;
     public void onSavedInstanceState(Bundle savedInstanceState){
         savedInstanceState.putString(USER,USER_NAME);
         savedInstanceState.putString(PASS,EMAIL);
@@ -56,9 +59,11 @@ public class MainActivity extends Activity {
     public void onResume(){
         super.onResume();
         Context context = getApplicationContext();
+
         SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.credentials), MODE_PRIVATE);
         USER_NAME = sharedPreferences.getString(USER,null);
         EMAIL = sharedPreferences.getString(PASS,null);
+
         boolean exists = sharedPreferences.contains("com.answer");
         CharSequence text = sharedPreferences.getString("com.answer","no value");
         int duration = Toast.LENGTH_LONG;
@@ -73,6 +78,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Context ctx = getApplicationContext();
 
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(getString(R.string.credentials), MODE_PRIVATE);
@@ -84,8 +90,20 @@ public class MainActivity extends Activity {
             startActivity(intent);
         }
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //db = helper.getReadableDatabase();
+                db = openOrCreateDatabase("beerdb.db",MODE_PRIVATE,null);
+                helper = new BeerDBHelper(getApplicationContext());
+                helper.onCreate(db);
+            }
+
+        }).start();
+
         Button listBeers = (Button)findViewById(R.id.list_beers);
         Button location = (Button)findViewById(R.id.location);
+
 
 
     }
