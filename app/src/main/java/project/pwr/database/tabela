@@ -1,0 +1,22 @@
+create table BeerTable
+(
+Id  int auto_increment,
+BeerName varchar(20) not null,
+Company varchar(40) not null,
+BeerType varchar(20) not null,
+BeerPower double not null
+);
+
+
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Tyskie","Kompania Piwowarska","Jasne", 5.5);
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Lech","Kampania Piwowarska","Jasne", 5.0);
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Piast","Carlsberg","Jasne", 5.5);
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Warka","Grupa Żywiec","Jasne", 5.5);
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Strong","Grupa Żywiec","Jasne", 6.5);
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Carlsberg","Carlsberg","Jasne", 5.5);
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Heineken","Browar Heineken","Jasne", 5.0);
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Żywiec","Grupa Żywiec","Jasne", 5.5);
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Kasztelan","Carlsberg","Jasne", 5.7);
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Namysłów","Browar Namysłów","Jasne", 6.0);
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Żubr","Kampania Piwowarska","Jasne", 6.0);
+insert into BeerTable(BeerName,Company,BeerType,BeerPower) values ("Książ","Carlsberg","Jasne", 6.0);
