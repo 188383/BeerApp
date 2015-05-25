@@ -1,5 +1,6 @@
 package project.pwr.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -45,7 +46,7 @@ public class BeerDBHelper extends SQLiteOpenHelper {
     private static final String CREATE_COUNTRIES = "CREATE TABLE "+Countries.TABLE_NAME+"("+
         Countries.COLUMN_NAME_ID +" INT NOT NULL PRIMARY KEY,"+
         Countries.COLUMN_NAME_COUNTRY_NAME+" TEXT NOT NULL,"+
-        Countries.COLUMN_NAME_COUNTRY_CODE+ "TEXT NOT NULL)";
+        Countries.COLUMN_NAME_COUNTRY_CODE+ " TEXT NOT NULL)";
 
     private static final String CREATE_BEERS = "CREATE TABLE "+Beers.TABLE_NAME+"("+
         Beers.COLUMN_NAME_ID+" INT NOT NULL PRIMARY KEY,"+
@@ -81,5 +82,28 @@ public class BeerDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public void onOpen(SQLiteDatabase db){
+        super.onOpen(db);
+    }
+
+    public void insertCountry(Country country){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues c = new ContentValues();
+        c.put("id",country.getId());
+        c.put("country_name",country.getCountryName());
+        c.put("country_code",country.getCountryName());
+        db.insert(Countries.TABLE_NAME,null,c);
+        db.close();
+    }
+    public void insertCountry(int id, String name, String code){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues c = new ContentValues();
+        c.put("id",id);
+        c.put("country_name",name);
+        c.put("country_code",code);
+        db.insert(Countries.TABLE_NAME,null,c);
+        db.close();
     }
 }

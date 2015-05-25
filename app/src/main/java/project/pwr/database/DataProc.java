@@ -2,6 +2,7 @@ package project.pwr.database;
 
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -58,18 +59,19 @@ public class DataProc {
         String query = "data="+post;
         os = connection.getOutputStream();
         os.write(query.getBytes());
-
+        int c;
+        StringBuilder builder = new StringBuilder();
         is = connection.getInputStream();
-       // byte[]size = new byte[10];
-     //   is.read(size);
-     //   String t = new String(size);
-     //   int l = Integer.parseInt(t);
-        byte[]values = new byte[2096];
-        is.read(values);
-        answer = (new String(values)).trim();//readValues(is);
-
+        BufferedInputStream s = new BufferedInputStream(is);
+        while((c=s.read())!=-1){
+            builder.append((char)c);
+        }
+    //space issue
+        byte[]values = new byte[100000];
+        //is.read(values);
+         ;//(new String(values)).trim();//readValues(is);
         connection.disconnect();
-
+        answer = builder.toString();
         return answer;
     }
 
