@@ -18,7 +18,7 @@ import android.widget.Button;
 import java.net.URI;
 import java.net.URL;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener {
     private String USER_NAME=null;
     private String EMAIL=null;
 
@@ -41,8 +41,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         Button listBeers = (Button)findViewById(R.id.list_beers);
-        Button options = (Button)findViewById(R.id.options);
+        Button options = (Button)findViewById(R.id.friends);
         Button location = (Button)findViewById(R.id.location);
+
+
         /*
             Thread checks whether the user has registered.
             If the user has registered then we're good to go, otherwise
@@ -64,5 +66,18 @@ public class MainActivity extends Activity {
             }
         }).start();
 
+        listBeers = (Button) findViewById(R.id.list_beers);
+        listBeers.setOnClickListener(this);
+    }
+
+
+    public void onClick(View v) {
+        switch(v.getId())
+        {
+            case R.id.list_beers:
+                Intent intent = new Intent(this, BeerListActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 }
