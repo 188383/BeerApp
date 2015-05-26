@@ -21,8 +21,15 @@
     <string name="save"><![CDATA[Save]]></string>
     <string name="cancel"><![CDATA[Cancel]]></string>
     <string name="credentials"><![CDATA[com.drinker.credentials]]></string>
-
+    <string name="auto_locate"><![CDATA[Auto Locate]]></string>
+    <string name="shop_name"><![CDATA[Shop Name:]]></string>
+    <string name="street"><![CDATA[Street:]]></string>
+    <string name="city"><![CDATA[City:]]></string>
+    <string name="country"><![CDATA[Country:]]></string>
+    <string name="number"><![CDATA[Number:]]></string>
+    <string name="region"><![CDATA[Region:]]></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_beer">BeerActivity</string>
+    <string name="title_activity_location">LocationActivity</string>
 </resources>

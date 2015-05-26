@@ -86,7 +86,7 @@ public class OptionsActivity extends Activity {
     }
 
    private class RegisterUser extends AsyncTask<String,Void,String> {
-
+        boolean success;
         protected String doInBackground(String... urls){
             int action  = Integer.parseInt(urls[0]);
             DataProc proc = new DataProc();
@@ -107,8 +107,9 @@ public class OptionsActivity extends Activity {
                  editor.putString(MainActivity.USER,name);
                  editor.putString(MainActivity.PASS,email);
                  editor.commit();
-
-            }catch(Exception e){answer = e.getMessage();}
+                answer = "REGISTRATION SUCCESS";
+                success = true;
+            }catch(Exception e){answer = e.getMessage();success = false;}
             return answer;
         }
 
@@ -120,6 +121,9 @@ public class OptionsActivity extends Activity {
             //String text = Long.toString(1);
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
+            if(success){
+                finish();
+            }
 
         }
     }
