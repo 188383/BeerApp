@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Connection;
 import java.util.logging.Logger;
 
 import android.content.Context;
@@ -19,16 +20,16 @@ import android.net.*;
  */
 public class DataProc {
 
-    public String readValues(InputStream is)throws Exception{
-        BufferedReader scan = new BufferedReader(new InputStreamReader(is));
-        String input;
-        String buffer = "";
-        if(scan.ready()){
-            while((input=scan.readLine())!=null){
-                buffer = buffer.concat(input);
-            }
+
+    public String readValues(HttpURLConnection c, String encoding)throws Exception{
+       BufferedInputStream r = new BufferedInputStream(c.getInputStream());
+        StringBuilder builder = new StringBuilder();
+        int cd;
+        while((cd=r.read())!=-1){
+            builder.append((char)cd);
         }
-        return buffer;
+
+        return builder.toString();
     }
 
     public String buildPost(String... vals) throws Exception{
@@ -60,18 +61,10 @@ public class DataProc {
         os = connection.getOutputStream();
         os.write(query.getBytes());
         int c;
-        StringBuilder builder = new StringBuilder();
-        is = connection.getInputStream();
-        BufferedInputStream s = new BufferedInputStream(is);
-        while((c=s.read())!=-1){
-            builder.append((char)c);
-        }
-    //space issue
-        byte[]values = new byte[100000];
-        //is.read(values);
-         ;//(new String(values)).trim();//readValues(is);
+        answer = readValues(connection,null);
+
         connection.disconnect();
-        answer = builder.toString();
+      //  answer = builder.toString();
         return answer;
     }
 

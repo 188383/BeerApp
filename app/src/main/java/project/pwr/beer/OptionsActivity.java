@@ -22,6 +22,7 @@ import project.pwr.database.BeerDBHelper;
 
 import project.pwr.database.Country;
 import project.pwr.database.DataProc;
+import project.pwr.database.DecodeClass;
 
 /*
     This is the options activity, that becomes active if
@@ -69,11 +70,6 @@ public class OptionsActivity extends Activity {
                 name = txt.getText().toString();
                 txt = (EditText)findViewById(R.id.email_text);
                 email = txt.getText().toString();
-                SharedPreferences shared = ctx.getSharedPreferences(getString(R.string.credentials),Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = shared.edit();
-                editor.putString(MainActivity.USER,name);
-                editor.putString(MainActivity.PASS,email);
-                editor.commit();
                 RegisterUser s = new RegisterUser();
                 s.execute("0", name, email);
 
@@ -103,15 +99,16 @@ public class OptionsActivity extends Activity {
 
                 post = proc.buildPost(urls);
                 answer = proc.postData(post);
-                JSONObject obj = new JSONObject(answer);
-                JSONArray arr = obj.getJSONArray("countries");
-                Country c = null;
-                for(int i=0;i<arr.length();i++){
-                    c = new Country(arr.getJSONObject(i));
-                    helper.insertCountry(c.getId(), c.getCountryName(),c.getCountryCode());
-                }
+                DecodeClass dc = new DecodeClass(getApplicationContext());
+                dc.decodeData(answer);
+                Context ctx = getApplicationContext();
+                 SharedPreferences shared = ctx.getSharedPreferences(getString(R.string.credentials),Context.MODE_PRIVATE);
+                 SharedPreferences.Editor editor = shared.edit();
+                 editor.putString(MainActivity.USER,name);
+                 editor.putString(MainActivity.PASS,email);
+                 editor.commit();
 
-            }catch(Exception e){answer = "FAILURE";}
+            }catch(Exception e){answer = e.getMessage();}
             return answer;
         }
 

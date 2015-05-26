@@ -2,9 +2,11 @@ package project.pwr.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.widget.Toast;
 
 /**
  * Created by pawel on 25.05.15.
@@ -54,9 +56,9 @@ public class BeerDBHelper extends SQLiteOpenHelper {
         Beers.COLUMN_NAME_FLAVOUR+" TEXT NOT NULL," +
         Beers.COLUMN_NAME_TYPE + " TEXT DEFAULT NULL," +
         Beers.COLUMN_NAME_BREWER + " TEXT NOT NULL," +
-        Beers.COLUMN_NAME_COUNTRY + " INT NOT NULL,"+
-        "FOREIGN KEY("+ Beers.COLUMN_NAME_COUNTRY+")REFERENCES " +Countries.TABLE_NAME+"("+
-        Countries.COLUMN_NAME_ID+"))";
+        Beers.COLUMN_NAME_COUNTRY + " TEXT NOT NULL,"+
+        "FOREIGN KEY ( "+ Beers.COLUMN_NAME_COUNTRY+" ) REFERENCES " +Countries.TABLE_NAME+"("+
+        Countries.COLUMN_NAME_COUNTRY_NAME+"))";
 
     private static final String CREATE_USERS = "CREATE TABLE "+Users.TABLE_NAME+"("+
          Users.COLUMN_NAME_ID + " INT NOT NULL PRIMARY KEY,"+
@@ -105,5 +107,20 @@ public class BeerDBHelper extends SQLiteOpenHelper {
         c.put("country_code",code);
         db.insert(Countries.TABLE_NAME,null,c);
         db.close();
+    }
+
+    public void insertBeer(Beer beer)throws Exception{
+        SQLiteDatabase db;
+        db = this.getWritableDatabase();
+        ContentValues co = new ContentValues();
+        co.put(Beers.COLUMN_NAME_ID,beer.getId());
+        co.put(Beers.COLUMN_NAME_BRAND,beer.getBrand());
+        co.put(Beers.COLUMN_NAME_FLAVOUR,beer.getFlavour());
+        co.put(Beers.COLUMN_NAME_TYPE,beer.getType());
+        co.put(Beers.COLUMN_NAME_BREWER,beer.getBrewer());
+        co.put(Beers.COLUMN_NAME_COUNTRY,beer.getCountry());
+
+        db.insert(Beers.TABLE_NAME,null,co);
+
     }
 }
