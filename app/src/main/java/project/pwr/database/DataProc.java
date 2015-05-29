@@ -18,8 +18,11 @@ import android.net.*;
 /**
  * Created by pawel on 24.05.15.
  */
-public class DataProc {
 
+/*Location services, consider using just a plain map to add location. to database then use a map to read in locations*/
+public class DataProc {
+    private final String ADDRESS = "172.16.5.235";
+    private final String PORT = "8080";
 
     public String readValues(HttpURLConnection c, String encoding)throws Exception{
        BufferedInputStream r = new BufferedInputStream(c.getInputStream());
@@ -48,7 +51,7 @@ public class DataProc {
 
 
 
-        URL newURL = new URL("http://192.168.1.11:8080/BeerServer/list");
+        URL newURL = new URL("http://"+ADDRESS+":"+PORT+"/BeerServer/list");
         HttpURLConnection connection = (HttpURLConnection)newURL.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type",

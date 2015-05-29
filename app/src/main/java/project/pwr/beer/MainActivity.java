@@ -75,6 +75,7 @@ public class MainActivity extends Activity {
 
         Button listBeers = (Button)findViewById(R.id.list_beers);
         Button location = (Button)findViewById(R.id.location);
+        Button friends = (Button)findViewById(R.id.friends);
 
         location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +85,12 @@ public class MainActivity extends Activity {
             }
         });
 
-
+        friends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),FriendsActivity.class));
+            }
+        });
 
     }
 
