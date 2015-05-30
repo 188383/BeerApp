@@ -35,6 +35,17 @@ public class DataProc {
         return builder.toString();
     }
 
+    public String buildUpdateLocation(String... vals) throws Exception{
+        JSONObject object = new JSONObject();
+        int action = Integer.parseInt(vals[0]);
+        object.put("action",action);
+        object.put("shop",vals[0]);
+        object.put("lat",vals[1]);
+        object.put("lon",vals[2]);
+        object.put("email",vals[3]);
+        return object.toString();
+    }
+
     public String buildPost(String... vals) throws Exception{
         JSONObject object = new JSONObject();
         int action = Integer.parseInt(vals[0]);

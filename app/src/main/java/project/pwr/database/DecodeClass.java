@@ -12,6 +12,7 @@ public class DecodeClass implements Runnable {
     Context context;
     JSONArray countries;
     JSONArray beers;
+    JSONArray locations;
     boolean success;
     public DecodeClass(Context context){
         this.context = context;
@@ -23,6 +24,7 @@ public class DecodeClass implements Runnable {
         if(success==true) {
             this.countries = obj.getJSONArray("countries");
             this.beers = obj.getJSONArray("beers");
+            this.locations=obj.getJSONArray("locations");
             startUpdate();
         }else{
             throw new MyException("USER EXISTS");
@@ -53,5 +55,13 @@ public class DecodeClass implements Runnable {
                 helper.insertBeer(b);
             }catch(Exception e){}
         }
+        Location l= null;
+        for(int i=0;i<locations.length();i++){
+            try{
+                l = new Location(locations.getJSONObject(i));
+                helper.insertLocation(l.getName(),l.getLat(),l.getLon());
+            }catch(Exception e){}
+        }
+
     }
 }

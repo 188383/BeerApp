@@ -3,6 +3,7 @@ package project.pwr.beer;
 import android.app.Activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -14,19 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import project.pwr.database.BeerDBHelper;
+import project.pwr.database.DataProc;
 
 class SaveLocation extends AsyncTask<String,Void,String> {
     Context context;
@@ -37,8 +27,13 @@ class SaveLocation extends AsyncTask<String,Void,String> {
     protected String doInBackground(String... params) {
         BeerDBHelper db = new BeerDBHelper(context);
         String success;
+        String answer;
         try {
-            db.addLocation(params[0],params[1],params[2]);
+
+            DataProc proc = new DataProc();
+            answer = proc.buildUpdateLocation("2",params[0],params[1],params[2],params[3]);
+            proc.postData(answer);
+            db.insertLocation(params[0],params[1],params[2]);
             success = "Location Added";
         } catch (Exception e) {
             success = "Error!";
@@ -74,15 +69,25 @@ public class LocationActivity extends Activity {
                 LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                 Location loc = lm.getLastKnownLocation(lm.GPS_PROVIDER);
 
+             //   if(loc==null){
+              //      loc = lm.getLastKnownLocation(lm.NETWORK_PROVIDER);
+             //   }
                 if(loc==null){
-                    loc = lm.getLastKnownLocation(lm.NETWORK_PROVIDER);
-                }else{
+                    int duration = Toast.LENGTH_LONG;
+
+                    Toast toast = Toast.makeText(getApplicationContext(), "Cannot Locate!", duration);
+                    toast.show();
+                }
+                else{
+                    SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.credentials), MODE_PRIVATE);
+                   // String USER_NAME = sharedPreferences.getString(MainActivity.USER,null);
+                    String EMAIL = sharedPreferences.getString(MainActivity.PASS,null);
                     EditText editText = (EditText)findViewById(R.id.shop_name);
                     String name = editText.getText().toString();
                     String lat = String.valueOf(loc.getLatitude());
                     String lon = String.valueOf(loc.getLongitude());
                     SaveLocation sl = new SaveLocation(getApplicationContext());
-                    sl.execute(name,lat,lon);
+                    sl.execute(name,lat,lon,EMAIL);
                 }
 
 

@@ -48,13 +48,6 @@ public class BeerDBHelper extends SQLiteOpenHelper {
         public static final String COLUMN_NAME_LON = "longitude";
     }
 
-    public static abstract class Friends implements BaseColumns{
-        public static final String TABLE_NAME = "Friends";
-        public static final String COLUMN_NAME_ID = "id";
-        public static final String COLUMN_NAME_EMAIL = "email";
-        public static final String COLUMN_NAME_NAME = "name";
-    }
-
         /*
             The set up methods that are used to create the database
 
@@ -81,14 +74,11 @@ public class BeerDBHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_LOCATIONS = "CREATE TABLE "+ Locations.TABLE_NAME+"("+
 
-            Locations.COLUMN_NAME_SHOPNAME+" TEXT NOT NULL PRIMARY KEY," +
+            Locations.COLUMN_NAME_SHOPNAME+" TEXT NOT NULL," +
             Locations.COLUMN_NAME_LAT+" TEXT NOT NULL," +
-            Locations.COLUMN_NAME_LON+" TEXT NOT NULL)";
-
-    private static final String CREATE_FRIENDS = "CREATE TABLE "+ Friends.TABLE_NAME+"("+
-            Friends.COLUMN_NAME_ID + " INT NOT NULL PRIMARY KEY,"+
-            Friends.COLUMN_NAME_NAME + " TEXT NOT NULL,"+
-            Friends.COLUMN_NAME_EMAIL+ " TEXT NOT NULL)";
+            Locations.COLUMN_NAME_LON+" TEXT NOT NULL, UNIQUE("+
+            Locations.COLUMN_NAME_SHOPNAME+","+Locations.COLUMN_NAME_LAT+","+
+            Locations.COLUMN_NAME_LON+"))";
 
 
     public static final int DB_VERSION=1;
@@ -105,7 +95,6 @@ public class BeerDBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_USERS);
         db.execSQL(CREATE_BEERS);
         db.execSQL(CREATE_LOCATIONS);
-        db.execSQL(CREATE_FRIENDS);
     }
 
     @Override
@@ -151,7 +140,7 @@ public class BeerDBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void addLocation(String name,String lat, String lon)throws Exception{
+    public void insertLocation(String name,String lat, String lon)throws Exception{
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(Locations.COLUMN_NAME_SHOPNAME,name);
@@ -159,4 +148,6 @@ public class BeerDBHelper extends SQLiteOpenHelper {
         cv.put(Locations.COLUMN_NAME_LON,lon);
         db.insert(Locations.TABLE_NAME,null,cv);
     }
+
+
 }
