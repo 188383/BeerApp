@@ -71,30 +71,13 @@ public class LocationActivity extends Activity implements GoogleApiClient.OnConn
 
         buildGoogleApiClient();
         Button save = (Button)findViewById(R.id.save_loc);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText t = (EditText)findViewById(R.id.shop_name);
-                if(mLastLocation!=null) {
-                    latitude = mLastLocation.getLatitude();
-                    longitude = mLastLocation.getLongitude();
-                    new Thread(new SaveLocation(t.getText().toString(),latitude,longitude,getApplicationContext())).start();
 
-                }else{
-                    Context context = getApplicationContext();
-                    CharSequence text = "Location Services Not Working!";
-                    int duration = Toast.LENGTH_LONG;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                }
-            }
-        });
 
     }
 
     @Override
     public void onConnected(Bundle bundle) {
+        //mGoogleAppClient.connect();
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleAppClient);
     }
 
@@ -105,7 +88,26 @@ public class LocationActivity extends Activity implements GoogleApiClient.OnConn
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        Context context = getApplicationContext();
+        CharSequence text = String.valueOf(connectionResult.getErrorCode());
+        int duration = Toast.LENGTH_LONG;
 
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+        mGoogleAppClient.connect();
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleAppClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleAppClient.isConnected()) {
+            mGoogleAppClient.disconnect();
+        }
     }
 
 }

@@ -44,14 +44,6 @@ public class MainActivity extends Activity {
         USER_NAME = sharedPreferences.getString(USER,null);
         EMAIL = sharedPreferences.getString(PASS,null);
 
-        boolean exists = sharedPreferences.contains("com.answer");
-        CharSequence text = sharedPreferences.getString("com.answer","no value");
-        int duration = Toast.LENGTH_LONG;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-
-        new RegisterClass().execute(new String[]{"1",USER_NAME,EMAIL});
     }
 
     @Override
