@@ -151,11 +151,12 @@ public class BeerDBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void addLocation(String name,double lat, double lon)throws Exception{
+    public void addLocation(String name,String lat, String lon)throws Exception{
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(Locations.COLUMN_NAME_SHOPNAME,name);
         cv.put(Locations.COLUMN_NAME_LAT,lat);
         cv.put(Locations.COLUMN_NAME_LON,lon);
+        db.insert(Locations.TABLE_NAME,null,cv);
     }
 }
