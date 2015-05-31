@@ -1,10 +1,13 @@
-create table BeerTable
+create table Beer
 (
 Id  int auto_increment,
 BeerName varchar(20) not null,
 Company varchar(40) not null,
 BeerType varchar(20) not null,
-BeerPower double not null
+BeerPower double not null,
+Country INT NOT NULL,
+PRIMARY KEY(Id),
+FOREIGN KEY(Country) REFERENCES Country(Id);
 );
 
 

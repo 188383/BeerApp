@@ -68,6 +68,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         listBeers = (Button) findViewById(R.id.list_beers);
         listBeers.setOnClickListener(this);
+
+        initMemory();
+    }
+
+    public void initMemory()
+    {
+        SharedPreferences settings = getSharedPreferences(Memory.APLICATION_NAME, 0);
+        Memory.getInstance().setDatabaseCreated(settings.getBoolean(Memory.DB_CREATED, false));
     }
 
 
