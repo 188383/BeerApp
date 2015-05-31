@@ -2,8 +2,13 @@ package project.pwr.beer;
 
 import android.app.Activity;
 
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -11,10 +16,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import project.pwr.database.Beer;
 import project.pwr.database.BeerDBHelper;
 import project.pwr.database.DataProc;
 
@@ -52,6 +64,10 @@ class SaveLocation extends AsyncTask<String,Void,String> {
 
 public class LocationActivity extends Activity {
 
+   SimpleCursorAdapter adapter;
+    Cursor c;
+
+
 
 
     @Override
@@ -62,6 +78,37 @@ public class LocationActivity extends Activity {
         Location loc;
         Button save = (Button)findViewById(R.id.save_loc);
 
+        new Thread(
+            new Runnable() {
+                String table = BeerDBHelper.Locations.TABLE_NAME;
+                String id = BeerDBHelper.Locations._ID;
+                String lat = BeerDBHelper.Locations.COLUMN_NAME_LAT;
+                String lon = BeerDBHelper.Locations.COLUMN_NAME_LON;
+                String name = BeerDBHelper.Locations.COLUMN_NAME_SHOPNAME;
+                final ListView listview = (ListView)findViewById(R.id.list_view);
+                String[] fromColumns = {name,
+                        lat,lon};
+                int[] toViews = {R.id.name, R.id.lat,R.id.lon};
+                //Cursor c;
+                @Override
+                public void run() {
+                    BeerDBHelper helper = new BeerDBHelper(getApplicationContext());
+                    SQLiteDatabase db = helper.getReadableDatabase();
+                    c = db.query(table,new String[]{id,name,lat,lon},null,null,null,null,null);
+
+                    adapter = new SimpleCursorAdapter(getApplicationContext(),R.layout.list_row, c, fromColumns, toViews, 0);
+                    listview.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            listview.setAdapter(adapter);
+                        }
+                    });
+                }
+
+            }
+        ).start();
+
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +116,10 @@ public class LocationActivity extends Activity {
                 LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                 Location loc = lm.getLastKnownLocation(lm.GPS_PROVIDER);
 
-             //   if(loc==null){
+
+
+
+                //   if(loc==null){
               //      loc = lm.getLastKnownLocation(lm.NETWORK_PROVIDER);
              //   }
                 if(loc==null){
@@ -94,7 +144,7 @@ public class LocationActivity extends Activity {
             }
         });
 
-    }
 
+    }
 
 }
