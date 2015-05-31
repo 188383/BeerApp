@@ -46,6 +46,13 @@ public class BeerDBHelper extends SQLiteOpenHelper {
         public static final String COLUMN_NAME_SHOPNAME = "shopname";
         public static final String COLUMN_NAME_LAT = "latitude";
         public static final String COLUMN_NAME_LON = "longitude";
+       // public static final String COLUMN_NAME_ID = "id";
+    }
+
+    public static abstract class Mapping implements BaseColumns{
+        public static final String TABLE_NAME = "Mapping";
+        public static final String COLUMN_NAME_BEER_ID = "id_beer";
+        public static final String COLUMN_NAME_SHOP_ID = "id_location";
     }
 
         /*
@@ -53,12 +60,12 @@ public class BeerDBHelper extends SQLiteOpenHelper {
 
          */
     private static final String CREATE_COUNTRIES = "CREATE TABLE "+Countries.TABLE_NAME+"("+
-        Countries.COLUMN_NAME_ID +" INT NOT NULL PRIMARY KEY,"+
+        Countries._ID +" INTEGER NOT NULL PRIMARY KEY,"+
         Countries.COLUMN_NAME_COUNTRY_NAME+" TEXT NOT NULL,"+
         Countries.COLUMN_NAME_COUNTRY_CODE+ " TEXT NOT NULL)";
 
     private static final String CREATE_BEERS = "CREATE TABLE "+Beers.TABLE_NAME+"("+
-        Beers.COLUMN_NAME_ID+" INT NOT NULL PRIMARY KEY,"+
+        Beers._ID+" INTEGER NOT NULL PRIMARY KEY,"+
         Beers.COLUMN_NAME_BRAND+" TEXT NOT NULL,"+
         Beers.COLUMN_NAME_FLAVOUR+" TEXT NOT NULL," +
         Beers.COLUMN_NAME_TYPE + " TEXT DEFAULT NULL," +
@@ -68,17 +75,23 @@ public class BeerDBHelper extends SQLiteOpenHelper {
         Countries.COLUMN_NAME_COUNTRY_NAME+"))";
 
     private static final String CREATE_USERS = "CREATE TABLE "+Users.TABLE_NAME+"("+
-         Users.COLUMN_NAME_ID + " INT NOT NULL PRIMARY KEY,"+
+         Users._ID + " INTEGER NOT NULL PRIMARY KEY,"+
          Users.COLUMN_NAME_USERNAME+ " TEXT NOT NULL,"+
          Users.COLUMN_NAME_EMAIL+" TEXT NOT NULL)";
 
     private static final String CREATE_LOCATIONS = "CREATE TABLE "+ Locations.TABLE_NAME+"("+
-
+            Locations._ID+" INTEGER PRIMARY KEY,"+
             Locations.COLUMN_NAME_SHOPNAME+" TEXT NOT NULL," +
             Locations.COLUMN_NAME_LAT+" TEXT NOT NULL," +
             Locations.COLUMN_NAME_LON+" TEXT NOT NULL, UNIQUE("+
             Locations.COLUMN_NAME_SHOPNAME+","+Locations.COLUMN_NAME_LAT+","+
             Locations.COLUMN_NAME_LON+"))";
+
+    private static final String CREATE_MAPPING = "CREATE TABLE "+ Mapping.TABLE_NAME+"("+
+            Mapping._ID + " INTEGER PRIMARY KEY,"+
+            Mapping.COLUMN_NAME_BEER_ID + " INT NOT NULL,"+
+            Mapping.COLUMN_NAME_SHOP_ID + " INT NOT NULL)";
+
 
 
     public static final int DB_VERSION=1;
@@ -92,7 +105,7 @@ public class BeerDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
        // db.execSQL(CREATE_COUNTRIES);
         db.execSQL(CREATE_COUNTRIES);
-        db.execSQL(CREATE_USERS);
+        db.execSQL(CREATE_MAPPING);
         db.execSQL(CREATE_BEERS);
         db.execSQL(CREATE_LOCATIONS);
     }
@@ -109,7 +122,7 @@ public class BeerDBHelper extends SQLiteOpenHelper {
     public void insertCountry(Country country){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues c = new ContentValues();
-        c.put("id",country.getId());
+       // c.put("id",country.getId());
         c.put("country_name",country.getCountryName());
         c.put("country_code",country.getCountryName());
         db.insert(Countries.TABLE_NAME,null,c);
@@ -118,7 +131,7 @@ public class BeerDBHelper extends SQLiteOpenHelper {
     public void insertCountry(int id, String name, String code){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues c = new ContentValues();
-        c.put("id",id);
+       // c.put("id",id);
         c.put("country_name",name);
         c.put("country_code",code);
         db.insert(Countries.TABLE_NAME,null,c);
@@ -129,7 +142,7 @@ public class BeerDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db;
         db = this.getWritableDatabase();
         ContentValues co = new ContentValues();
-        co.put(Beers.COLUMN_NAME_ID,beer.getId());
+       // co.put(Beers.COLUMN_NAME_ID,beer.getId());
         co.put(Beers.COLUMN_NAME_BRAND,beer.getBrand());
         co.put(Beers.COLUMN_NAME_FLAVOUR,beer.getFlavour());
         co.put(Beers.COLUMN_NAME_TYPE,beer.getType());
@@ -137,6 +150,7 @@ public class BeerDBHelper extends SQLiteOpenHelper {
         co.put(Beers.COLUMN_NAME_COUNTRY,beer.getCountry());
 
         db.insert(Beers.TABLE_NAME,null,co);
+        db.close();
 
     }
 
@@ -147,7 +161,19 @@ public class BeerDBHelper extends SQLiteOpenHelper {
         cv.put(Locations.COLUMN_NAME_LAT,lat);
         cv.put(Locations.COLUMN_NAME_LON,lon);
         db.insert(Locations.TABLE_NAME,null,cv);
+        db.close();
     }
 
+    public void insertMapping(String brand,String flavour,String shop,String lat, String lon)throws Exception{
+        SQLiteDatabase db = this.getWritableDatabase();
+       db.execSQL("INSERT INTO "+Mapping.TABLE_NAME+ "("+Mapping.COLUMN_NAME_BEER_ID+","+
+               Mapping.COLUMN_NAME_SHOP_ID+") VALUES((SELECT "+ Beers._ID +" FROM "+Beers.TABLE_NAME+" WHERE "+
+                Beers.COLUMN_NAME_BRAND +" = '" + brand + "' and "+ Beers.COLUMN_NAME_FLAVOUR + "= '"+
+              flavour+"'),(SELECT "+Locations._ID+" FROM "+Locations.TABLE_NAME + " WHERE "+
+               Locations.COLUMN_NAME_SHOPNAME + " = '"+ shop + "' and "+ Locations.COLUMN_NAME_LAT + " = '" +
+              lat + "' and "+ Locations.COLUMN_NAME_LON + " = '" + lon +"'))");
+        db.close();
+
+    }
 
 }

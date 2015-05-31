@@ -96,7 +96,7 @@ public class OptionsActivity extends Activity {
             try {
                 //db = openOrCreateDatabase("beerdb.db",MODE_PRIVATE,null);
                 helper = new BeerDBHelper(getApplicationContext());
-
+                helper.close();
                 post = proc.buildPost(urls);
                 answer = proc.postData(post);
                 DecodeClass dc = new DecodeClass(getApplicationContext());

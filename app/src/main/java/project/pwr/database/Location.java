@@ -10,7 +10,7 @@ public class Location {
     private String lat;
     private String lon;
     public Location(JSONObject country)throws Exception{
-        setName(country.getString("shop"));
+        setName(country.getString("shopname"));
         setLat(country.getString("lat"));
         setLon(country.getString("lon"));
     }

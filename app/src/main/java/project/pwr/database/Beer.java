@@ -14,7 +14,7 @@ public class Beer {
     private String country;
 
     public Beer(JSONObject beer)throws Exception{
-        id = beer.getInt("id");
+      //  id = beer.getInt("id");
         brand = beer.getString("brand");
         flavour = beer.getString("flavour");
         type = beer.getString("type");
