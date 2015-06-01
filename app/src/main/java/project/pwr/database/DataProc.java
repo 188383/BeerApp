@@ -39,7 +39,7 @@ public class DataProc {
         JSONObject object = new JSONObject();
         int action = Integer.parseInt(vals[0]);
         object.put("action",action);
-        object.put("shop",vals[0]);
+        object.put("shopname",vals[0]);
         object.put("lat",vals[1]);
         object.put("lon",vals[2]);
         object.put("email",vals[3]);
