@@ -176,4 +176,25 @@ public class BeerDBHelper extends SQLiteOpenHelper {
 
     }
 
+    public Cursor getBeers(){
+        Cursor cursor;
+        String[]project = {Beers._ID,Beers.COLUMN_NAME_BRAND,Beers.COLUMN_NAME_FLAVOUR,Beers.COLUMN_NAME_TYPE};
+        SQLiteDatabase db = this.getReadableDatabase();
+        cursor = db.query(Beers.TABLE_NAME,project,null,null,null,null,null,null);
+        //db.close();
+        return cursor;
+    }
+
+    public Cursor getMapping(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor;
+
+       // cursor = db.query(Locations.TABLE_NAME,new String[]{
+        //                Locations.COLUMN_NAME_SHOPNAME,Locations.COLUMN_NAME_LAT,Locations.COLUMN_NAME_LON},
+       //    null,null,null,null,null);
+        cursor = db.rawQuery("SELECT shopname,latitude,longitude FROM Locations,Mapping WHERE " +
+                "Mapping.id_beer=?",new String[]{String.valueOf(id)});
+        return cursor;
+
+    }
 }
