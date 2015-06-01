@@ -100,12 +100,9 @@ public class LocationActivity extends Activity {
                     c = db.query(table,new String[]{id,name,lat,lon},null,null,null,null,null);
 
                     adapter = new SimpleCursorAdapter(getApplicationContext(),R.layout.list_row, c, fromColumns, toViews, 0);
-                    listview.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            listview.setAdapter(adapter);
-                        }
-                    });
+                    listview.setAdapter(adapter);
+                    
+
                 }
 
             }

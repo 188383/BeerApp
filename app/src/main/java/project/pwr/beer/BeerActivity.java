@@ -3,6 +3,7 @@ package project.pwr.beer;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Pair;
@@ -59,24 +60,7 @@ public class BeerActivity extends Activity {
                         places = new ArrayList<Object>();
                         c = helper.getBeers();
                         adapter = new SimpleCursorAdapter(getApplicationContext(),R.layout.beer_row, c, fromColumns, toViews, 0);
-                        listView.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                listView.setAdapter(adapter);
-
-                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        c.getLong(position);
-                                        String _id = c.getColumnName(0);
-                                        String vals = String.valueOf(c.getLong(0));
-
-                                        places.add(vals);
-                                    }
-                                });
-                            }
-                        });
+                        listView.setAdapter(adapter);
                     }
                 }
         ).start();
