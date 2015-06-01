@@ -57,8 +57,17 @@
         android:id="@+id/save_loc"
         android:text="@string/save"
         android:layout_below="@id/linear_one"
+
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"/>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/save_loc"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
+        ></ListView>
 
 </RelativeLayout>
 </ScrollView>
