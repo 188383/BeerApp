@@ -48,16 +48,11 @@ public class MapActivity extends Activity implements GoogleMap.OnMapLoadedCallba
 
     @Override
     public void onMapLoaded() {
-                String t;
-                double lat;
-                double lon;
+                String t="3";
+                double lat=0.0;
+                double lon=0.0;
                 BeerDBHelper helper = new BeerDBHelper(getApplicationContext());
-               c =  helper.getMapping(1);
-               if(c.moveToNext()){
-                   t = c.getString(0);
-                   lat = Double.parseDouble(c.getString(1));
-                   lon = Double.parseDouble(c.getString(2));
-               }else{t=" d";lat = 0.0;lon=0.0;}
+
 
                map.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title(t));
 
