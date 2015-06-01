@@ -68,6 +68,9 @@ public class LocationActivity extends Activity {
     Cursor c;
 
 
+    public void onBackPressed(){
+        finish();
+    }
 
 
     @Override

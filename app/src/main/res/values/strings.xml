@@ -29,9 +29,11 @@
     <string name="number"><![CDATA[Number:]]></string>
     <string name="region"><![CDATA[Region:]]></string>
     <string name="add_friend"><![CDATA[Add Friend]]></string>
+    <string name="locate"><![CDATA[Locate]]></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_beer">BeerActivity</string>
     <string name="title_activity_location">LocationActivity</string>
     <string name="title_activity_friends">FriendsActivity</string>
+    <string name="title_activity_map">MapActivity</string>
 </resources>

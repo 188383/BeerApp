@@ -21,7 +21,7 @@ import android.net.*;
 
 /*Location services, consider using just a plain map to add location. to database then use a map to read in locations*/
 public class DataProc {
-    private final String ADDRESS = "192.168.1.11";
+    private final String ADDRESS = "172.16.5.235";
     private final String PORT = "8080";
 
     public String readValues(HttpURLConnection c, String encoding)throws Exception{
