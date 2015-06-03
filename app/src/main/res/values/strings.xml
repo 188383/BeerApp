@@ -30,10 +30,16 @@
     <string name="region"><![CDATA[Region:]]></string>
     <string name="add_friend"><![CDATA[Add Friend]]></string>
     <string name="locate"><![CDATA[Locate]]></string>
+    <string name="brand"><![CDATA[Brand]]></string>
+    <string name="flavour"><![CDATA[Flavour]]></string>
+    <string name="type"><![CDATA[Type]]></string>
+    <string name="brewer"><![CDATA[Brewer]]></string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_beer">BeerActivity</string>
     <string name="title_activity_location">LocationActivity</string>
     <string name="title_activity_friends">FriendsActivity</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_add_beer">AddBeer</string>
 </resources>

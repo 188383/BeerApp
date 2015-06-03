@@ -44,7 +44,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="project.pwr.beer.MainActivity" />
         </activity>
-
         <activity
             android:name=".BeerActivity"
             android:label="@string/title_activity_beer"
@@ -56,6 +55,14 @@
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_map"
+            android:parentActivityName=".BeerActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="project.pwr.beer.BeerActivity" />
+        </activity>
+        <activity
+            android:name=".AddBeer"
+            android:label="@string/title_activity_add_beer"
             android:parentActivityName=".BeerActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
