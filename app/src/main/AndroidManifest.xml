@@ -68,6 +68,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="project.pwr.beer.BeerActivity" />
         </activity>
+        <activity
+            android:name="project.pwr.MappingActivity"
+            android:label="@string/title_activity_mapping" >
+        </activity>
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -16,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -101,7 +103,21 @@ public class LocationActivity extends Activity {
 
                     adapter = new SimpleCursorAdapter(getApplicationContext(),R.layout.list_row, c, fromColumns, toViews, 0);
                     listview.setAdapter(adapter);
-                    
+
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            String listItem ="";
+                            while(c.moveToPosition(position)){
+                                listItem = listItem.concat(c.getString(0)+",");
+                                listItem = listItem.concat(c.getString(1)+",");
+                                listItem = listItem.concat(c.getString(2));
+                            }
+                            Intent intent = new Intent(getApplicationContext(),null);
+                            intent.putExtra("com.shop.name",listItem);
+                            startActivity(null);
+                        }
+                    });
 
                 }
 

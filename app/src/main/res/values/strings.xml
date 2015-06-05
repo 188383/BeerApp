@@ -34,7 +34,8 @@
     <string name="flavour"><![CDATA[Flavour]]></string>
     <string name="type"><![CDATA[Type]]></string>
     <string name="brewer"><![CDATA[Brewer]]></string>
-
+    <string name="new_mapping"><![CDATA[New Mapping]]></string>
+    <string name="save_map"><![CDATA[Save]]></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_beer">BeerActivity</string>
@@ -42,4 +43,6 @@
     <string name="title_activity_friends">FriendsActivity</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_add_beer">AddBeer</string>
+    <string name="title_activity_beer_to_location">BeerToLocation</string>
+    <string name="title_activity_mapping">MappingActivity</string>
 </resources>

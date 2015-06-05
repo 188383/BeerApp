@@ -92,6 +92,15 @@ public class BeerDBHelper extends SQLiteOpenHelper {
             Mapping.COLUMN_NAME_BEER_ID + " INT NOT NULL,"+
             Mapping.COLUMN_NAME_SHOP_ID + " INT NOT NULL)";
 
+    private static final String GET_MAPPING = "SELECT "+Locations.TABLE_NAME+"."+Locations.COLUMN_NAME_SHOPNAME+","
+            +Locations.TABLE_NAME+"."+Locations.COLUMN_NAME_LAT+","+Locations.TABLE_NAME
+            +"."+Locations.COLUMN_NAME_LON+" FROM "
+            + Locations.TABLE_NAME + " JOIN (SELECT "+ Mapping.TABLE_NAME+"."+Mapping.COLUMN_NAME_SHOP_ID
+            + " as id FROM " + Mapping.TABLE_NAME+" JOIN "+ Beers.TABLE_NAME +" ON "+ Beers.TABLE_NAME+"."
+            + Beers._ID + " = " + Mapping.TABLE_NAME+"."+Mapping.COLUMN_NAME_BEER_ID + " AND "
+            + Beers.TABLE_NAME+"."+Beers._ID+ " = ?) as T WHERE " + Locations.TABLE_NAME+"."+Locations._ID
+            + " = T.id";
+
 
 
     public static final int DB_VERSION=1;
@@ -185,16 +194,31 @@ public class BeerDBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getMapping(int id){
+    public void insertBeer(String brand, String flavour, String type, String brewer, String country) throws Exception{
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(Beers.COLUMN_NAME_BRAND,brand);
+        contentValues.put(Beers.COLUMN_NAME_FLAVOUR,flavour);
+        contentValues.put(Beers.COLUMN_NAME_TYPE,type);
+        contentValues.put(Beers.COLUMN_NAME_BREWER,brewer);
+        contentValues.put(Beers.COLUMN_NAME_COUNTRY,country);
+
+        db.insert(Beers.TABLE_NAME,null,contentValues);
+    }
+
+    public Cursor getMapping(long brand) throws Exception{
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor;
+        cursor = db.rawQuery(GET_MAPPING,new String[]{String.valueOf(brand)});
 
-       // cursor = db.query(Locations.TABLE_NAME,new String[]{
-        //                Locations.COLUMN_NAME_SHOPNAME,Locations.COLUMN_NAME_LAT,Locations.COLUMN_NAME_LON},
-       //    null,null,null,null,null);
-        cursor = db.rawQuery("SELECT shopname,latitude,longitude FROM Locations,Mapping WHERE " +
-                "Mapping.id_beer=?",new String[]{String.valueOf(id)});
         return cursor;
+    }
 
+    public Cursor getLocations()throws Exception{
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c;
+        c = db.rawQuery("SELECT shopname,longitude,latitude FROM Locations",null);
+        return c;
     }
 }

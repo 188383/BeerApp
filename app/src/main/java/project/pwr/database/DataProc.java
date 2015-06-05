@@ -21,7 +21,8 @@ import android.net.*;
 
 /*Location services, consider using just a plain map to add location. to database then use a map to read in locations*/
 public class DataProc {
-    private final String ADDRESS = "172.16.5.235";
+    //private final String ADDRESS = "172.16.5.235";
+    private final String ADDRESS = "192.168.1.11";
     private final String PORT = "8080";
 
     public String readValues(HttpURLConnection c, String encoding)throws Exception{
@@ -33,6 +34,19 @@ public class DataProc {
         }
 
         return builder.toString();
+    }
+//build this class
+    public String buildUpdateBeer(String... vals) throws Exception{
+        JSONObject object = new JSONObject();
+        int action = Integer.parseInt(vals[0]);
+        object.put("action",action);
+        object.put("brand",vals[1]);
+        object.put("flavour",vals[2]);
+        object.put("type",vals[3]);
+        object.put("brewer",vals[4]);
+        object.put("country",vals[5]);
+        object.put("email",vals[6]);
+        return object.toString();
     }
 
     public String buildUpdateLocation(String... vals) throws Exception{
